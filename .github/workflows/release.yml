@@ -1,0 +1,55 @@
+# Copyright 2024, Consensys Software Inc.
+# SPDX-License-Identifier: Apache-2.0
+
+# This workflow will perform release of this project when a tag is pushed.
+
+name: release
+
+on:
+  push:
+    tags: [ "v*" ]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: git fetch --tags --force origin #workaround https://github.com/actions/checkout/issues/882
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      # Configure Gradle for optimal use in GiHub Actions, including caching of downloaded dependencies.
+      # See: https://github.com/gradle/actions/blob/main/setup-gradle/README.md
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@db19848a5fa7950289d3668fb053140cf3028d43 # v3.3.2
+
+      - name: Clean
+        run: ./gradlew clean printVersion
+
+      - name: Assemble
+        run: ./gradlew assemble
+
+      - name: Release
+        run: ./gradlew jreleaserFullRelease
+        env:
+          JRELEASER_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JRELEASER_GITHUB_USERNAME: ${{ github.actor }}
+          JRELEASER_GITHUB_EMAIL: ${{ github.actor }}@users.noreply.github.com
+
+      # Persist jreleaser logs
+      - name: JReleaser logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jreleaser-release
+          path: |
+            build/jreleaser/trace.log
+            build/jreleaser/output.properties

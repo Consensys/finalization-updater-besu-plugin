@@ -1,0 +1,16 @@
+# Copyright 2024, Consensys Software Inc.
+# SPDX-License-Identifier: Apache-2.0
+
+name: "Validate Gradle Wrapper"
+
+on: [push, pull_request]
+
+jobs:
+  validation:
+    name: "Validation"
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: gradle/actions/wrapper-validation@d211a39090cba0cdce485f2a0b1f28f39ccda0c9
