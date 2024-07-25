@@ -18,10 +18,22 @@ repositories {
   // Use Maven Central for resolving dependencies.
   mavenCentral()
 
-  // For Besu plugin dependencies
+  // for linea-besu plugin dependencies
+  maven {
+    url = uri("https://artifacts.consensys.net/public/linea-besu/maven/")
+    content { includeGroupByRegex("io\\.consensys\\..*") }
+  }
+
+  // For Besu dependencies
   maven {
     url = uri("https://hyperledger.jfrog.io/artifactory/besu-maven/")
     content { includeGroupByRegex("org\\.hyperledger\\.besu($|\\..*)") }
+  }
+
+  // for consensys dependencies
+  maven {
+    url = uri("https://artifacts.consensys.net/public/maven/maven/")
+    content { includeGroupByRegex("tech\\.pegasys(\\..*)?") }
   }
 }
 
@@ -30,6 +42,7 @@ dependencies {
   // `api` is used here to distinguish between dependencies which should be used IF it is to be used
   // as a dependency during compiling some other library that depends on this project.
   api(libs.besu.plugin.api)
+  api(libs.besu.internal.api)
 
   // https://github.com/google/auto/tree/main/service
   annotationProcessor(libs.google.auto.service)

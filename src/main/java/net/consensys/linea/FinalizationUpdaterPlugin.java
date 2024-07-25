@@ -5,6 +5,8 @@ package net.consensys.linea;
 import com.google.auto.service.AutoService;
 import org.hyperledger.besu.plugin.BesuContext;
 import org.hyperledger.besu.plugin.BesuPlugin;
+import org.hyperledger.besu.plugin.services.BlockchainService;
+import org.hyperledger.besu.plugin.services.RpcEndpointService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,6 +21,29 @@ public class FinalizationUpdaterPlugin implements BesuPlugin {
   @Override
   public void register(final BesuContext besuContext) {
     LOG.trace("Registering plugin ...");
+
+    final RpcEndpointService rpcEndpointService =
+        besuContext
+            .getService(RpcEndpointService.class)
+            .orElseThrow(
+                () ->
+                    new RuntimeException(
+                        "Failed to obtain RpcEndpointService from the BesuContext."));
+
+    final BlockchainService blockchainService =
+        besuContext
+            .getService(BlockchainService.class)
+            .orElseThrow(
+                () ->
+                    new RuntimeException(
+                        "Failed to obtain BlockchainService from the BesuContext."));
+
+    final FinalizationUpdaterRpcMethod finalizationUpdaterRpcMethod =
+        new FinalizationUpdaterRpcMethod(blockchainService);
+    rpcEndpointService.registerRPCEndpoint(
+        FinalizationUpdaterRpcMethod.RPC_NAMESPACE,
+        FinalizationUpdaterRpcMethod.RPC_METHOD_NAME,
+        finalizationUpdaterRpcMethod::execute);
   }
 
   @Override

@@ -35,7 +35,7 @@ The plugin jar will be available at `build/libs/finalization-updater-besu-plugin
 Drop the `finalization-updater-besu-plugin-<version>.jar` in the `/plugins` folder under Besu installation. This plugin 
 will expose following RPC methods:
 ```shell
-linea_updateFinalizedBlockV1(finalizedBlockNumber: Long): Boolean
+linea_ipc_updateFinalizedBlockV1(finalizedBlockNumber: Long): Boolean
 ```
 
 ## License
