@@ -9,6 +9,7 @@ plugins {
   alias(libs.plugins.spotless)
   alias(libs.plugins.jgitver)
   alias(libs.plugins.jreleaser)
+  alias(libs.plugins.gradle.errorprone.plugin)
 }
 
 project.group = "net.consensys.linea.besu.plugin"
@@ -41,6 +42,9 @@ dependencies {
   testImplementation(libs.junit.jupiter)
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")
   testRuntimeOnly(libs.slf4j.simple)
+
+  // errorprone dependencies
+  errorprone(libs.google.error.prone)
 }
 
 // Apply a specific Java toolchain to ease working on different environments.
