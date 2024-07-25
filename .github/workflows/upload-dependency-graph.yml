@@ -1,0 +1,27 @@
+# Copyright 2024, Consensys Software Inc.
+# SPDX-License-Identifier: Apache-2.0
+
+name: upload-dependency-graph
+
+on:
+  pull_request:
+
+# 'write' permission is not available on pull-request events.
+# See download-dependency-graph.yml which will run after this workflow.
+permissions:
+  contents: read
+
+jobs:
+  dependency-submission:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+      # Generates and submits a dependency graph, enabling Dependabot Alerts for all project dependencies.
+      - name: Generate and save dependency graph
+        uses: gradle/actions/dependency-submission@d211a39090cba0cdce485f2a0b1f28f39ccda0c9 # v3.3.2
+        with:
+          dependency-graph: generate-and-upload

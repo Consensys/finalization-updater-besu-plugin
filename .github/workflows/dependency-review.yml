@@ -1,0 +1,24 @@
+# Copyright 2024, Consensys Software Inc.
+# SPDX-License-Identifier: Apache-2.0
+
+# This workflow scans pull requests for dependency changes, and will raise an error if any vulnerabilities or
+# invalid licenses are being introduced.
+# See https://github.com/actions/dependency-review-action
+
+name: dependency-review
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  dependency-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Dependency Review'
+        uses: actions/dependency-review-action@0c155c5e8556a497adf53f2c18edabf945ed8e70 #4.3.2
+        with:
+          retry-on-snapshot-warnings: true
+          retry-on-snapshot-warnings-timeout: 600

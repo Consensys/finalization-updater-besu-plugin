@@ -1,0 +1,34 @@
+# Copyright 2024, Consensys Software Inc.
+# SPDX-License-Identifier: Apache-2.0
+
+# https://docs.gradle.org/current/userguide/platforms.html#sub::toml-dependencies-format
+
+[versions]
+assertj = "3.26.3"
+besu = "24.6.0"
+google-auto-service = "1.1.1"
+google-error-prone = "2.29.2"
+gradle-errorprone-plugin = "4.0.1"
+jgitver = "0.10.0-rc03"
+jreleaser = "1.13.1"
+junit-jupiter = "5.10.2"
+picocli = "4.7.5" # same version as in Besu
+slf4j = "2.0.13"
+spotless = "6.25.0"
+
+[libraries]
+assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
+besu-plugin-api = {module = "org.hyperledger.besu:plugin-api", version.ref = "besu"}
+google-auto-service = { module = "com.google.auto.service:auto-service", version.ref = "google-auto-service" }
+google-auto-service-annotations = { module = "com.google.auto.service:auto-service-annotations", version.ref = "google-auto-service" }
+google-error-prone = { module = "com.google.errorprone:error_prone_core", version.ref = "google-error-prone" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter", version.ref = "junit-jupiter" }
+picocli = {module = "info.picocli:picocli", version.ref = "picocli"}
+slf4j-api = { module = "org.slf4j:slf4j-api", version.ref  = "slf4j" }
+slf4j-simple = { module = "org.slf4j:slf4j-simple", version.ref  = "slf4j" }
+
+[plugins]
+jgitver = { id = "fr.brouillard.oss.gradle.jgitver", version.ref = "jgitver" }
+jreleaser = { id = "org.jreleaser", version.ref = "jreleaser"}
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+gradle-errorprone-plugin = { id = "net.ltgt.errorprone", version.ref = "gradle-errorprone-plugin" }

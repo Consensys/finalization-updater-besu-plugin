@@ -1,3 +1,6 @@
+# Copyright 2024, Consensys Software Inc.
+# SPDX-License-Identifier: Apache-2.0
+
 .gradle
 **/build/
 !src/**/build/
@@ -19,3 +22,9 @@ gradle-app.setting
 .project
 # JDT-specific (Eclipse Java Development Tools)
 .classpath
+
+# IntelliJ IDEA
+.idea/
+
+# Mac
+.DS_Store
