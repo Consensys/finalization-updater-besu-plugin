@@ -34,13 +34,16 @@ public class FinalizationUpdaterRpcMethod {
     this.blockchainService = blockchainService;
   }
 
+  /**
+   * Executes the RPC method. This method will be called by Besu RPC service.
+   *
+   * @param request Instance of PluginRpcRequest. The request object contains the parameters passed.
+   * @return Boolean.TRUE if the finalized block number is successfully updated.
+   * @throws PluginRpcEndpointException if the block number is invalid or the block is not found.
+   */
   public Boolean execute(final PluginRpcRequest request) {
     LOG.trace("FinalizationUpdaterRpcMethod execute called");
-    /*
-    1. Returns true when the update was successful;
-    2. throws BlockNotFoundException when finalizedBlockNumber is not in the local chain
-    3. throws IllegalArgumentException when finalizedBlockNumber <= 0
-     */
+
     final Long finalizedBlockNumber = parseResult(request);
     final Optional<BlockContext> finalizedBlock =
         blockchainService.getBlockByNumber(finalizedBlockNumber);
