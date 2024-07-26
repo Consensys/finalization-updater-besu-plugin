@@ -5,7 +5,7 @@
 
 [versions]
 assertj = "3.26.3"
-besu = "24.6.0"
+linea-besu = "24.7-develop-26f89ac"
 google-auto-service = "1.1.1"
 google-error-prone = "2.29.2"
 gradle-errorprone-plugin = "4.0.1"
@@ -18,7 +18,8 @@ spotless = "6.25.0"
 
 [libraries]
 assertj-core = { module = "org.assertj:assertj-core", version.ref = "assertj" }
-besu-plugin-api = {module = "org.hyperledger.besu:plugin-api", version.ref = "besu"}
+besu-plugin-api = {module = "io.consensys.linea-besu:plugin-api", version.ref = "linea-besu"}
+besu-internal-api = {module = "io.consensys.linea-besu.internal:api", version.ref = "linea-besu"}
 google-auto-service = { module = "com.google.auto.service:auto-service", version.ref = "google-auto-service" }
 google-auto-service-annotations = { module = "com.google.auto.service:auto-service-annotations", version.ref = "google-auto-service" }
 google-error-prone = { module = "com.google.errorprone:error_prone_core", version.ref = "google-error-prone" }

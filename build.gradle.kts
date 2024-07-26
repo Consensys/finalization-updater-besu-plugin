@@ -15,33 +15,42 @@ plugins {
 project.group = "net.consensys.linea.besu.plugin"
 
 repositories {
+  mavenLocal() // for testing locally build Besu plugin
+
   // Use Maven Central for resolving dependencies.
   mavenCentral()
 
-  // For Besu plugin dependencies
+  // for linea-besu plugin dependencies
+  maven {
+    url = uri("https://artifacts.consensys.net/public/linea-besu/maven/")
+    content { includeGroupByRegex("io\\.consensys\\..*") }
+  }
+
+  // For Besu dependencies
   maven {
     url = uri("https://hyperledger.jfrog.io/artifactory/besu-maven/")
     content { includeGroupByRegex("org\\.hyperledger\\.besu($|\\..*)") }
   }
+
+  // for consensys dependencies
+  maven {
+    url = uri("https://artifacts.consensys.net/public/maven/maven/")
+    content { includeGroupByRegex("tech\\.pegasys(\\..*)?") }
+  }
 }
 
+// project dependencies. Testing dependencies are declared in the testing block.
 dependencies {
-  // This project jar is not supposed to be used as compilation dependency.
-  // `api` is used here to distinguish between dependencies which should be used IF it is to be used
-  // as a dependency during compiling some other library that depends on this project.
   api(libs.besu.plugin.api)
+  api(libs.besu.internal.api) {
+    exclude(group = "org.apache.logging.log4j", module = "log4j-slf4j2-impl")
+  }
 
   // https://github.com/google/auto/tree/main/service
   annotationProcessor(libs.google.auto.service)
   implementation(libs.google.auto.service.annotations)
   implementation(libs.slf4j.api)
   implementation(libs.picocli)
-
-  // testing dependencies
-  testImplementation(libs.assertj.core)
-  testImplementation(libs.junit.jupiter)
-  testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-  testRuntimeOnly(libs.slf4j.simple)
 
   // errorprone dependencies
   errorprone(libs.google.error.prone)
@@ -50,10 +59,31 @@ dependencies {
 // Apply a specific Java toolchain to ease working on different environments.
 java { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
 
-tasks.named<Test>("test") {
-  // Use JUnit Platform for unit tests.
-  useJUnitPlatform()
+testing {
+  suites {
+    // shared with every JVM test suite
+    withType<JvmTestSuite> {
+      useJUnitJupiter()
+      dependencies {
+        implementation(libs.assertj.core)
+        runtimeOnly(libs.slf4j.simple)
+      }
+    }
+
+    // default test suite
+    val test by getting(JvmTestSuite::class)
+
+    val integrationTest by
+        registering(JvmTestSuite::class) {
+          dependencies { implementation(project()) }
+
+          // make integrationTest suite run after the default test suite
+          targets { all { testTask.configure { shouldRunAfter(test) } } }
+        }
+  }
 }
+
+tasks.named("check") { dependsOn(testing.suites.named("integrationTest")) }
 
 spotless {
   java {
