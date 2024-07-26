@@ -45,6 +45,8 @@ public class FinalizationUpdaterRpcMethod {
     LOG.trace("FinalizationUpdaterRpcMethod execute called");
 
     final Long finalizedBlockNumber = parseResult(request);
+
+    // lookup finalized block by number in local chain
     final Optional<BlockContext> finalizedBlock =
         blockchainService.getBlockByNumber(finalizedBlockNumber);
     if (finalizedBlock.isEmpty()) {
@@ -52,14 +54,17 @@ public class FinalizationUpdaterRpcMethod {
           RpcErrorType.BLOCK_NOT_FOUND,
           "Block not found in the local chain: " + finalizedBlockNumber);
     }
-    // TODO: Persist the finalized block number
+
+    // Persist the finalized block number
+    blockchainService.setFinalizedBlock(finalizedBlock.get().getBlockHeader().getBlockHash());
+
     return Boolean.TRUE;
   }
 
   private Long parseResult(final PluginRpcRequest request) {
     Long blockNumber;
     try {
-      Object[] params = request.getParams();
+      final Object[] params = request.getParams();
       blockNumber = parameterParser.required(params, 0, Long.class);
     } catch (final Exception e) {
       throw new PluginRpcEndpointException(RpcErrorType.INVALID_PARAMS, e.getMessage());
