@@ -5,7 +5,7 @@
 
 [versions]
 assertj = "3.26.3"
-linea-besu = "24.6-develop-752aeff"
+linea-besu = "24.7-develop-26f89ac"
 google-auto-service = "1.1.1"
 google-error-prone = "2.29.2"
 gradle-errorprone-plugin = "4.0.1"
